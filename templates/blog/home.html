@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Home - DevOps Blog{% endblock %}
+{% block content %}
+<h1>All Posts</h1>
+{% for post in posts %}
+    <article>
+        <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+        <p>by {{ post.author.username }} on {{ post.created_at }}</p>
+        <p>{{ post.content|truncatechars:200 }}</p>
+    </article>
+{% empty %}
+    <p>No posts yet.</p>
+{% endfor %}
+{% endblock %}
+

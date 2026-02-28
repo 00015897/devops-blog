@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ object_list.0.title }} - DevOps Blog{% endblock %}
+{% block content %}
+{% with post=object_list.0 %}
+<article>
+    <h1>{{ post.title }}</h1>
+    <p>by {{ post.author.username }} on {{ post.created_at }}</p>
+    <div>{{ post.content }}</div>
+</article>
+
+{% if user == post.author %}
+    <a href="{% url 'post_update' post.pk %}">Edit</a>
+    <a href="{% url 'post_delete' post.pk %}">Delete</a>
+{% endif %}
+
+<section>
+    <h2>Comments</h2>
+    {% for comment in post.comments.all %}
+        {% if comment.is_approved %}
+            <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+        {% endif %}
+    {% empty %}
+        <p>No comments yet.</p>
+    {% endfor %}
+</section>
+{% endwith %}
+{% endblock %}
+

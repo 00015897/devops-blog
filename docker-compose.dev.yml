@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    depends_on:
+      - db
+    ports:
+      - "8000:8000"
+    networks:
+      - devops_network
+
+  db:
+    image: postgres:16-alpine
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - devops_network
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  devops_network:
+    driver: bridge
+
