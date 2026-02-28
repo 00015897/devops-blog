@@ -13,6 +13,7 @@ This project is a Django-based blog application built as a DevOps coursework pro
 
 ### Technologies
 - **Backend**: Django 5, Gunicorn
+- **Testing**: pytest-django, flake8
 - **Database**: PostgreSQL
 - **Web server**: Nginx
 - **Containerization**: Docker, Docker Compose
