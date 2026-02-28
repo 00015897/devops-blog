@@ -51,16 +51,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "devops_project.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB", "devops_db"),
-        "USER": os.environ.get("POSTGRES_USER", "devops_user"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "devops_password"),
-        "HOST": os.environ.get("POSTGRES_HOST", "db"),
-        "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+if os.environ.get("CI"):
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": ":memory:",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.environ.get("POSTGRES_DB", "devops_db"),
+            "USER": os.environ.get("POSTGRES_USER", "devops_user"),
+            "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "devops_password"),
+            "HOST": os.environ.get("POSTGRES_HOST", "db"),
+            "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
