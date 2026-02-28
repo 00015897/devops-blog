@@ -1,5 +1,7 @@
 ## DevOps Blog Application
 
+**Author:** Student ID 00015897
+
 This project is a Django-based blog application built as a DevOps coursework project. It includes user authentication, CRUD for posts, a relational PostgreSQL database, Docker-based deployment with Nginx and Gunicorn, and a GitHub Actions CI/CD pipeline.
 
 ### Features
@@ -50,6 +52,11 @@ This project is a Django-based blog application built as a DevOps coursework pro
   - Pytest tests
   - Docker image build and push to Docker Hub
   - SSH to server and `docker compose up -d` + migrations + `collectstatic`
+
+### Test User (for assessors)
+- **Username:** `assessor`  
+- **Password:** `testpass123`  
+*(Create this user after deployment via admin or registration.)*
 
 ### Environment Variables
 See `.env.example` for all required variables:
