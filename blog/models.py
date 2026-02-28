@@ -1,3 +1,4 @@
+"""Blog models: Category, Post, Comment with M2M and Fk relationships."""
 from django.conf import settings
 from django.db import models
 
