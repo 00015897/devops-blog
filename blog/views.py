@@ -1,3 +1,4 @@
+"""Blog views: home, post CRUD, registration, dashboard."""
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
