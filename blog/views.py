@@ -1,6 +1,6 @@
 """Blog views: home, post CRUD, registration, dashboard."""
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpRequest, HttpResponse
@@ -83,4 +83,12 @@ def register(request: HttpRequest) -> HttpResponse:
 def dashboard(request: HttpRequest) -> HttpResponse:
     posts = Post.objects.filter(author=request.user)
     return render(request, "blog/dashboard.html", {"posts": posts})
+
+
+def logout_view(request: HttpRequest) -> HttpResponse:
+    """Log the user out and redirect to home."""
+    logout(request)
+    messages.info(request, "You have been logged out.")
+    return redirect("home")
+
 

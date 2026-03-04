@@ -1,5 +1,6 @@
 """Admin configuration for blog models."""
 from django.contrib import admin
+from django.contrib.auth.models import Group
 
 from .models import Category, Comment, Post
 
@@ -29,4 +30,8 @@ class CommentAdmin(admin.ModelAdmin):
     list_display = ("post", "author", "created_at", "is_approved")
     list_filter = ("is_approved", "created_at")
     search_fields = ("content",)
+
+
+# Hide Groups from the admin sidebar; keep only Users.
+admin.site.unregister(Group)
 

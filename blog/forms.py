@@ -13,6 +13,13 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ["title", "content", "categories"]
+        widgets = {
+            "categories": forms.CheckboxSelectMultiple(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["categories"].required = False
 
 
 class RegisterForm(UserCreationForm):
