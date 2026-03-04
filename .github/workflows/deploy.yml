@@ -30,6 +30,10 @@ jobs:
         run: |
           flake8 blog devops_project manage.py
 
+      - name: Run migrations
+        run: |
+          python manage.py migrate --noinput
+
       - name: Run tests
         run: |
           pytest -v --tb=short
