@@ -49,6 +49,16 @@ jobs:
         run: |
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ github.sha }}
-      # Deploy step: add when you have a server. In repo Secrets add SSH_HOST, SSH_USERNAME, SSH_PRIVATE_KEY
-      # then uncomment the block below and add this step back.
 
+      - name: Deploy to Azure VM
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key \
+            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
+            "docker pull $IMAGE_NAME:latest && \
+             docker stop devops-blog 2>/dev/null; docker rm devops-blog 2>/dev/null; \
+             docker run -d --restart unless-stopped -p 80:8000 \
+               -e DJANGO_ALLOWED_HOSTS=${{ secrets.SSH_HOST }},localhost,127.0.0.1 \
+               --name devops-blog $IMAGE_NAME:latest"
