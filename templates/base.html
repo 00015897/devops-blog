@@ -3,34 +3,48 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}DevOps Blog{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Coffee Shop Blog{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}?v=2">
 </head>
 <body>
-<header>
-    <nav>
-        <a href="{% url 'home' %}">Home</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}">My Posts</a>
-            <a href="{% url 'post_create' %}">New Post</a>
-            <span>Hi, {{ user.username }}</span>
-            <a href="{% url 'logout' %}">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'register' %}">Register</a>
-        {% endif %}
-    </nav>
+<header class="site-header">
+    <div class="header-inner">
+        <a href="{% url 'home' %}" class="brand">
+            <i class="fas fa-mug-hot"></i>
+            <span>Coffee Blog</span>
+        </a>
+        <nav class="main-nav">
+            <a href="{% url 'home' %}" class="nav-link"><i class="fas fa-home"></i> Home</a>
+            <a href="{% url 'admin:index' %}" class="nav-link"><i class="fas fa-shield-alt"></i> Admin</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="nav-link"><i class="fas fa-th-list"></i> My Posts</a>
+                <a href="{% url 'post_create' %}" class="nav-link nav-link--cta"><i class="fas fa-plus"></i> New Post</a>
+                <span class="nav-user"><i class="fas fa-user-circle"></i> {{ user.username }}</span>
+                <a href="{% url 'logout_view' %}" class="nav-link nav-link--outline"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-link"><i class="fas fa-sign-in-alt"></i> Login</a>
+                <a href="{% url 'register' %}" class="nav-link nav-link--cta"><i class="fas fa-user-plus"></i> Register</a>
+            {% endif %}
+        </nav>
+    </div>
 </header>
-<main>
+<main class="site-main">
     {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-                <li>{{ message }}</li>
+                <li class="message message--{{ message.tags|default:'info' }}"><i class="fas fa-info-circle"></i> {{ message }}</li>
             {% endfor %}
         </ul>
     {% endif %}
     {% block content %}{% endblock %}
 </main>
+<footer class="site-footer">
+    <p>&copy; Coffee Blog. Share your coffee moments.</p>
+</footer>
 </body>
 </html>
-
