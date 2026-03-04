@@ -5,7 +5,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "change-me-in-production")
 
-DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
+# Default DEBUG=True when running locally (no POSTGRES_HOST); override with DJANGO_DEBUG=0 in production
+_use_sqlite = not os.environ.get("CI") and not os.environ.get("POSTGRES_HOST")
+DEBUG = os.environ.get("DJANGO_DEBUG", "1" if _use_sqlite else "0") == "1"
 
 ALLOWED_HOSTS = [
     host for host in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",") if host
@@ -58,7 +60,7 @@ if os.environ.get("CI"):
             "NAME": ":memory:",
         }
     }
-else:
+elif os.environ.get("POSTGRES_HOST"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -67,6 +69,14 @@ else:
             "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "devops_password"),
             "HOST": os.environ.get("POSTGRES_HOST", "db"),
             "PORT": os.environ.get("POSTGRES_PORT", "5432"),
+        }
+    }
+else:
+    # Local dev without Docker: use SQLite
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
 
