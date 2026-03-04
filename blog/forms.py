@@ -28,4 +28,3 @@ class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email")
-

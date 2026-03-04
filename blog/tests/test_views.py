@@ -39,4 +39,3 @@ class ViewTests(TestCase):
 
     def test_many_to_many_relationship(self):
         self.assertIn(self.category, self.post.categories.all())
-

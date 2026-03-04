@@ -34,4 +34,3 @@ class CommentAdmin(admin.ModelAdmin):
 
 # Hide Groups from the admin sidebar; keep only Users.
 admin.site.unregister(Group)
-
