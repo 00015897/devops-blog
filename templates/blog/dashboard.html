@@ -1,15 +1,16 @@
 {% extends "base.html" %}
-{% block title %}My Posts - DevOps Blog{% endblock %}
+{% block title %}My Posts - Coffee Blog{% endblock %}
 {% block content %}
-<h1>Dashboard - My Posts</h1>
+<h1 class="page-title"><i class="fas fa-th-list"></i> My Posts</h1>
 {% for post in posts %}
-    <article>
+    <article class="card">
         <h2>{{ post.title }}</h2>
-        <a href="{% url 'post_update' post.pk %}">Edit</a>
-        <a href="{% url 'post_delete' post.pk %}">Delete</a>
+        <div class="dashboard-actions">
+            <a href="{% url 'post_update' post.pk %}" class="btn btn--ghost"><i class="fas fa-edit"></i> Edit</a>
+            <a href="{% url 'post_delete' post.pk %}" class="btn btn--danger"><i class="fas fa-trash-alt"></i> Delete</a>
+        </div>
     </article>
 {% empty %}
-    <p>You have not created any posts yet.</p>
+    <p class="empty-state">You haven't written any posts yet. <a href="{% url 'post_create' %}">Create your first post</a>.</p>
 {% endfor %}
 {% endblock %}
-

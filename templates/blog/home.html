@@ -1,15 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Home - DevOps Blog{% endblock %}
+{% block title %}Home - Coffee Blog{% endblock %}
 {% block content %}
-<h1>Latest Posts</h1>
+<h1 class="page-title">Latest Posts</h1>
 {% for post in posts %}
-    <article>
-        <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
-        <p>by {{ post.author.username }} on {{ post.created_at }}</p>
-        <p>{{ post.content|truncatechars:200 }}</p>
+    <article class="post-card">
+        <h2 class="post-card__title"><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+        <p class="post-card__meta"><i class="fas fa-user"></i> {{ post.author.username }} &nbsp;·&nbsp; <i class="fas fa-calendar-alt"></i> {{ post.created_at|date:"M d, Y" }}</p>
+        <p class="post-card__excerpt">{{ post.content|truncatechars:200 }}</p>
     </article>
 {% empty %}
-    <p>No posts yet.</p>
+    <p class="empty-state">No posts yet. <a href="{% url 'post_create' %}">Write the first one!</a></p>
 {% endfor %}
 {% endblock %}
-

@@ -1,11 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Delete Post - DevOps Blog{% endblock %}
+{% block title %}Delete Post - Coffee Blog{% endblock %}
 {% block content %}
-<h1>Delete Post</h1>
-<p>Are you sure you want to delete "{{ object.title }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Confirm</button>
-</form>
+<div class="content-center">
+<h1 class="page-title"><i class="fas fa-trash-alt"></i> Delete Post</h1>
+<div class="form-card">
+    <p>Are you sure you want to delete <strong>"{{ object.title }}"</strong>? This cannot be undone.</p>
+    <form method="post" class="form-actions" style="margin-top: 1rem;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--danger"><i class="fas fa-trash-alt"></i> Delete</button>
+        <a href="{% url 'home' %}" class="btn btn--ghost">Cancel</a>
+    </form>
+</div>
+</div>
 {% endblock %}
-

@@ -1,28 +1,28 @@
 {% extends "base.html" %}
-{% block title %}{{ object_list.0.title }} - DevOps Blog{% endblock %}
+{% block title %}{{ object_list.0.title }} - Coffee Blog{% endblock %}
 {% block content %}
 {% with post=object_list.0 %}
-<article>
+<article class="card">
     <h1>{{ post.title }}</h1>
-    <p>by {{ post.author.username }} on {{ post.created_at }}</p>
-    <div>{{ post.content }}</div>
+    <p class="post-card__meta"><i class="fas fa-user"></i> {{ post.author.username }} &nbsp;·&nbsp; <i class="fas fa-calendar-alt"></i> {{ post.created_at|date:"M d, Y" }}</p>
+    <div class="article-body">{{ post.content }}</div>
+    {% if user == post.author %}
+        <div class="article-actions">
+            <a href="{% url 'post_update' post.pk %}" class="btn btn--ghost"><i class="fas fa-edit"></i> Edit</a>
+            <a href="{% url 'post_delete' post.pk %}" class="btn btn--danger"><i class="fas fa-trash-alt"></i> Delete</a>
+        </div>
+    {% endif %}
 </article>
 
-{% if user == post.author %}
-    <a href="{% url 'post_update' post.pk %}">Edit</a>
-    <a href="{% url 'post_delete' post.pk %}">Delete</a>
-{% endif %}
-
-<section>
-    <h2>Comments</h2>
+<section class="comments-section card">
+    <h2><i class="fas fa-comments"></i> Comments</h2>
     {% for comment in post.comments.all %}
         {% if comment.is_approved %}
-            <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+            <div class="comment-item"><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</div>
         {% endif %}
     {% empty %}
-        <p>No comments yet.</p>
+        <p class="empty-state">No comments yet.</p>
     {% endfor %}
 </section>
 {% endwith %}
 {% endblock %}
-
