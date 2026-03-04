@@ -54,10 +54,11 @@ TEMPLATES = [
 WSGI_APPLICATION = "devops_project.wsgi.application"
 
 if os.environ.get("CI"):
+    # File-based SQLite so pytest-django sees migrated schema (in-memory = new DB per connection)
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": ":memory:",
+            "NAME": BASE_DIR / "db_ci.sqlite3",
         }
     }
 elif os.environ.get("POSTGRES_HOST"):
