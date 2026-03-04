@@ -91,4 +91,3 @@ def logout_view(request: HttpRequest) -> HttpResponse:
     messages.info(request, "You have been logged out.")
     return redirect("home")
 
-
