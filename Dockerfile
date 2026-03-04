@@ -24,7 +24,9 @@ RUN addgroup --system app && adduser --system --ingroup app app
 COPY --from=builder /install /usr/local
 COPY . /app
 
-RUN mkdir -p /app/staticfiles /app/media && chown -R app:app /app
+RUN mkdir -p /app/staticfiles /app/media \
+    && python manage.py collectstatic --noinput --clear \
+    && chown -R app:app /app
 
 USER app
 
