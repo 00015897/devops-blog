@@ -30,12 +30,9 @@ jobs:
         run: |
           flake8 blog devops_project manage.py
 
-      - name: Run migrations
+      - name: Run migrations and tests
         run: |
           python manage.py migrate --noinput
-
-      - name: Run tests
-        run: |
           pytest -v --tb=short
 
       - name: Log in to Docker Hub
