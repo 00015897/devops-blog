@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <style>
+        html[data-theme="light"], :root {
+            --primary: #6f4e37;
+            --secondary: #5a3d2a;
+            --accent: #c4a77d;
+            --primary-fg: #ffffff;
+            --header-color: #ffffff;
+            --link-fg: #6f4e37;
+            --link-hover-color: #5a3d2a;
+            --breadcrumbs-bg: #6f4e37;
+            --breadcrumbs-fg: #ffffff;
+        }
+    </style>
+{% endblock %}
+
