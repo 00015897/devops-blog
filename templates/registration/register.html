@@ -1,11 +1,23 @@
 {% extends "base.html" %}
-{% block title %}Register - DevOps Blog{% endblock %}
+{% block title %}Register - Coffee Blog{% endblock %}
 {% block content %}
-<h1>Register</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Register</button>
-</form>
+<div class="content-center">
+<h1 class="page-title"><i class="fas fa-user-plus"></i> Register</h1>
+<div class="form-card">
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.help_text %}<p class="helptext">{{ field.help_text }}</p>{% endif %}
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary"><i class="fas fa-user-plus"></i> Register</button>
+        </div>
+    </form>
+</div>
+</div>
 {% endblock %}
-
