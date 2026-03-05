@@ -114,8 +114,10 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 # Security settings for production
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-SESSION_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SECURE = not DEBUG
+# Only use Secure cookies when actually serving over HTTPS (set USE_HTTPS=1 when using SSL)
+_use_https = os.environ.get("USE_HTTPS", "0") == "1"
+SESSION_COOKIE_SECURE = _use_https
+CSRF_COOKIE_SECURE = _use_https
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
