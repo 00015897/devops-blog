@@ -28,9 +28,12 @@ RUN mkdir -p /app/staticfiles /app/media \
     && python manage.py collectstatic --noinput --clear \
     && chown -R app:app /app
 
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh && chown app:app /app/entrypoint.sh
+
 USER app
 
 ENV DJANGO_SETTINGS_MODULE=devops_project.settings
 
-CMD ["gunicorn", "devops_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 

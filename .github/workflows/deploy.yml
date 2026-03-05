@@ -50,15 +50,31 @@ jobs:
           docker push $IMAGE_NAME:latest
           docker push $IMAGE_NAME:${{ github.sha }}
 
-      - name: Deploy to Azure VM
+      - name: Create production .env
+        run: |
+          cat << EOF > .env.prod
+          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/devops-blog:latest
+          POSTGRES_DB=devops_db
+          POSTGRES_USER=devops_user
+          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_HOST=db
+          POSTGRES_PORT=5432
+          DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG=0
+          DJANGO_ALLOWED_HOSTS=${{ secrets.SSH_HOST }},localhost,127.0.0.1
+          EOF
+          sed -i 's/^          //' .env.prod
+
+      - name: Deploy to server (Compose: web + PostgreSQL + Nginx)
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/deploy_key \
-            ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} \
-            "docker pull $IMAGE_NAME:latest && \
-             docker stop devops-blog 2>/dev/null; docker rm devops-blog 2>/dev/null; \
-             docker run -d --restart unless-stopped -p 80:8000 \
-               -e DJANGO_ALLOWED_HOSTS=${{ secrets.SSH_HOST }},localhost,127.0.0.1 \
-               --name devops-blog $IMAGE_NAME:latest"
+          SSH_OPTS="-o StrictHostKeyChecking=no -i ~/.ssh/deploy_key"
+          TARGET="${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}"
+          DEPLOY_DIR="devops-blog"
+          ssh $SSH_OPTS $TARGET "docker stop devops-blog 2>/dev/null; docker rm devops-blog 2>/dev/null; true; mkdir -p $DEPLOY_DIR $DEPLOY_DIR/nginx"
+          scp $SSH_OPTS .env.prod $TARGET:$DEPLOY_DIR/.env
+          scp $SSH_OPTS docker-compose.prod.yml $TARGET:$DEPLOY_DIR/
+          scp $SSH_OPTS nginx/default.conf $TARGET:$DEPLOY_DIR/nginx/
+          ssh $SSH_OPTS $TARGET "cd $DEPLOY_DIR && docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d --remove-orphans"

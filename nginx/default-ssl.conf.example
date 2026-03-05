@@ -1,0 +1,37 @@
+# Optional: use this when you have Let's Encrypt certs.
+# Copy to default.conf and mount certs: - /etc/letsencrypt:/etc/letsencrypt:ro
+# Replace yourdomain.uz with your domain.
+
+upstream django {
+    server web:8000;
+}
+
+server {
+    listen 80;
+    server_name yourdomain.uz www.yourdomain.uz;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name yourdomain.uz www.yourdomain.uz;
+
+    ssl_certificate /etc/letsencrypt/live/yourdomain.uz/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yourdomain.uz/privkey.pem;
+
+    location /static/ {
+        alias /app/staticfiles/;
+    }
+
+    location /media/ {
+        alias /app/media/;
+    }
+
+    location / {
+        proxy_pass http://django;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
