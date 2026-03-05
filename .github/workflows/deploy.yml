@@ -52,20 +52,17 @@ jobs:
 
       - name: Create production .env
         run: |
-          cat << EOF > .env.prod
-          IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/devops-blog:latest
-          POSTGRES_DB=devops_db
-          POSTGRES_USER=devops_user
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_HOST=db
-          POSTGRES_PORT=5432
-          DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}
-          DJANGO_DEBUG=0
-          DJANGO_ALLOWED_HOSTS=${{ secrets.SSH_HOST }},localhost,127.0.0.1
-          EOF
-          sed -i 's/^          //' .env.prod
+          echo "IMAGE_NAME=${{ secrets.DOCKERHUB_USERNAME }}/devops-blog:latest" > .env.prod
+          echo "POSTGRES_DB=devops_db" >> .env.prod
+          echo "POSTGRES_USER=devops_user" >> .env.prod
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env.prod
+          echo "POSTGRES_HOST=db" >> .env.prod
+          echo "POSTGRES_PORT=5432" >> .env.prod
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env.prod
+          echo "DJANGO_DEBUG=0" >> .env.prod
+          echo "DJANGO_ALLOWED_HOSTS=${{ secrets.SSH_HOST }},localhost,127.0.0.1" >> .env.prod
 
-      - name: Deploy to server (Compose: web + PostgreSQL + Nginx)
+      - name: "Deploy to server (Compose: web + PostgreSQL + Nginx)"
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/deploy_key
